@@ -8,7 +8,7 @@
 		var SingleCharts = db.collection('SingleCharts');
 		var SingleChartEntries = db.collection('SingleChartEntries');
 
-		router.get ('/fetch/single/:_chart', function (req, res) {
+		router.get ('/fetch_chart/single/:_chart', function (req, res) {
 			var chartName = req.params._chart;
 			var year = req.query.year;
 			var month = req.query.month;
@@ -21,6 +21,12 @@
 				if (doc.length === 0) {
 					exec (execStr, function (error, stdout, stderr) {
 						var chartData = JSON.parse (stdout);
+
+						if (chartData.length === 0) {
+							res.json (chartData);
+							return;
+						}
+
 						var bulk = SingleChartEntries.initializeOrderedBulkOp ();
 
 						for (var i in chartData) {
@@ -37,7 +43,10 @@
 						}
 
 						bulk.execute (function (err, r) {
-							SingleChartEntries.find ({ chart: chartName }, { rank: { $elemMatch: { week: date } } }).toArray (function (err, doc) {
+							SingleChartEntries.find (
+								{ chart: chartName, rank: { $elemMatch: { week: date } } },
+								{ rank: { $elemMatch: { week: date } } 
+							}).toArray (function (err, doc) {
 								var entries = [];
 								
 								for (var i in doc) {

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="chartwatchApp">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+	<script type="text/javascript" src="/lib/angular/angular.min.js"></script>
+	<script type="text/javascript" src="/lib/angular-route/angular-route.min.js"></script>
+	<script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="/lib/bootstrap/js/dropdown.js"></script>
+	<script type="text/javascript" src="/js/chartwatchApp.js"></script>
+	<script type="text/javascript" src="/js/controller.js"></script>
+	<script type="text/javascript" src="/js/directive.js"></script>
+	<script type="text/javascript" src="/js/filter.js"></script>
+	
+	<title>Chart Watch</title>
+</head>
+
+<body>
+	<div class="container">
+		<navi></navi>
+		<div class="row">
+			<div class="col-md-12 col-lg-12">
+				<ng-view></ng-view>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

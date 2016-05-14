@@ -1,0 +1,6 @@
+<span ng-hide="rank.prev">New</span>
+<span ng-show="rank.prev">
+	<span ng-show="rank.prev < rank.cur">{{rank.prev}} <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></span>
+	<span ng-show="rank.prev == rank.cur"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></span>
+	<span ng-show="rank.prev > rank.cur">{{rank.prev}} <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></span>
+</span>
