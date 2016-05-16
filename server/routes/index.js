@@ -7,10 +7,15 @@
 
   var router = express.Router ();
 
-	var MongoClient = require('mongodb').MongoClient, assert = require('assert');
-  var url = 'mongodb://localhost:27017/chartwatch';
+	var Promise = require ('bluebird');
+	var mongodb = require ('mongodb');
+	var MongoClient = mongodb.MongoClient;
+  var	assert = require ('assert');
+  var url = 'mongodb://localhost:27017/chartwatchTest';
   
 	var routeDir = path.resolve ('server/routes');
+
+	Promise.promisifyAll(mongodb);
 
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);

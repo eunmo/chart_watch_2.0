@@ -13,55 +13,56 @@
 			var date = new Date (Date.UTC (year, month - 1, day));
 			var prevWeek = new Date (Date.UTC (year, month - 1, day - 7));
 
-			SingleCharts.find ({ chart: chartName, week: date }).toArray (function (err, doc) {
-				if (doc.length === 0) {
+			SingleCharts.find ({ chart: chartName, week: date }).toArrayAsync ()
+		  .then (function (docs) {
+				if (docs.length === 0) {
 					res.json ([]);
 				} else {
-					var chart = doc[0];
-					SingleChartEntries.find ({ _id: { $in: chart.entries } }, { artist: 1, title: 1, rank: 1 })
-				  .toArray (function (err, doc) {
-						var entries = [];
+					var chart = docs[0];
 
-						for (var i in doc) {
-							var entry = doc[i];
-							var curRank = 100;
-							var prevRank = null;
-							var rankMin = 1000;
-							var rankRun = 0;
-
-							for (var j in entry.rank) {
-								var rankElem = entry.rank[j];
-								
-								if (rankElem.week <= date) {
-									if (rankElem.week >= date) { /* equality */
-										curRank = rankElem.rank;
-									}
-									else if (rankElem.week >= prevWeek) {
-										prevRank = rankElem.rank;
-									}
-									rankRun++;
-
-									if (rankElem.rank < rankMin) {
-										rankMin = rankElem.rank;
-									}
-								}
-							}
-
-							entries[curRank - 1] = { 
-								artist: entry.artist, 
-								title: entry.title,
-								rank: {
-									cur: curRank,
-									run: rankRun,
-									min: rankMin,
-									prev: prevRank
-								}
-						 	};
-						}
-
-						res.json (entries);
-				});
+					return SingleChartEntries.find ({ _id: { $in: chart.entries } }, { artist: 1, title: 1, rank: 1 }).toArrayAsync (); 
 				}
+			}).then (function (doc) {
+				var entries = [];
+
+				for (var i in doc) {
+					var entry = doc[i];
+					var curRank = 100;
+					var prevRank = null;
+					var rankMin = 1000;
+					var rankRun = 0;
+
+					for (var j in entry.rank) {
+						var rankElem = entry.rank[j];
+
+						if (rankElem.week <= date) {
+							if (rankElem.week >= date) { /* equality */
+								curRank = rankElem.rank;
+							}
+							else if (rankElem.week >= prevWeek) {
+								prevRank = rankElem.rank;
+							}
+							rankRun++;
+
+							if (rankElem.rank < rankMin) {
+								rankMin = rankElem.rank;
+							}
+						}
+					}
+
+					entries[curRank - 1] = { 
+						artist: entry.artist, 
+						title: entry.title,
+						rank: {
+							cur: curRank,
+							run: rankRun,
+							min: rankMin,
+							prev: prevRank
+						}
+					};
+				}
+
+				res.json (entries);
 			});
 		});	
 	};
