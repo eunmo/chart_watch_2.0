@@ -23,7 +23,7 @@
 						var chartData = JSON.parse (stdout);
 
 						if (chartData.length === 0) {
-							res.json (chartData);
+							res.sendStatus (200);
 							return;
 						}
 
@@ -57,13 +57,57 @@
 								}
 
 								SingleCharts.insert ({ chart: chartName, week: date, entries: entries }, function (err, doc) {
-									res.json (doc.ops[0]);
+									res.sendStatus (200);
+								});
+							});
+						});
+					});
+				} else if (doc[0].entries.length <= 10 ) {
+					exec (execStr, function (error, stdout, stderr) {
+						var chartData = JSON.parse (stdout);
+
+						if (chartData.length <= doc[0].entries.length) {
+							res.sendStatus (200);
+							return;
+						}
+
+						var bulk = SingleChartEntries.initializeOrderedBulkOp ();
+
+						for (var i = doc[0].entries.length; i < chartData.length; i++) {
+							var entry = chartData[i];
+							var rank = { week: date, rank: entry.rank };
+				
+							bulk
+							.find({ chart: chartName, artist: entry.artist, title: entry.title })
+						  .upsert()
+						  .update({
+							  $setOnInsert: { chart: chartName, artist: entry.artist, title: entry.title },
+							  $push: { rank: rank }
+							});
+						}
+
+						bulk.execute (function (err, r) {
+							SingleChartEntries.find (
+								{ chart: chartName, rank: { $elemMatch: { week: date } } },
+								{ rank: { $elemMatch: { week: date } } 
+							}).toArray (function (err, doc) {
+								var entries = [];
+								
+								for (var i in doc) {
+									var entry = doc[i];
+									var rankElem = entry.rank[0];
+									
+									entries[rankElem.rank - 1] = entry._id;
+								}
+
+								SingleCharts.update ({ chart: chartName, week: date }, { $set: { entries: entries } }, function (err, doc) {
+									res.sendStatus (200);
 								});
 							});
 						});
 					});
 				} else {
-					res.json (doc);
+					res.sendStatus (200);
 				}
 			});
 		});

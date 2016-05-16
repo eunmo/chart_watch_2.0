@@ -30,7 +30,7 @@ $date->truncate( to => 'week' )->subtract( weeks => $subWeeks );
 $date->add( days => 5 );
 
 my $end_date = $date;
-$date = DateTime->new(year => 2000, month => 1, day => 1);
+$date = DateTime->new(year => 2010, month => 1, day => 2);
 
 while ($date <= $end_date) {
 	my $yy = $date->year;

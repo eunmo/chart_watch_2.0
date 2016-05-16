@@ -61,7 +61,7 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 		$scope.date = $scope.maxDate;
 	} 
 
-	$scope.fetch = function () {
+	$scope.getChart = function () {
 		$scope.rows = [];
 		$http.get('chart/single/' + $scope.chart,
 							{ params: { 
@@ -71,11 +71,10 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 							} })
 		.success(function (chartRows) {
 			$scope.rows = chartRows;
-			console.log ($scope.rows);
 		});
 	};
 
-	$scope.fetch();
+	$scope.getChart();
 
 	$scope.updateDate = function (offset) {
 		$scope.date.setDate($scope.date.getDate() + offset);
@@ -94,5 +93,17 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 	
 	$scope.next = function () {
 		$scope.updateDate(7);
+	};
+
+	$scope.fetch = function () {
+		$http.get('fetch_chart/single/' + $scope.chart,
+							{ params: { 
+								year: $scope.date.getFullYear(),
+								month: $scope.date.getMonth() + 1,
+								day: $scope.date.getDate()
+							} })
+		.success(function (chartRows) {
+			$scope.getChart ();
+		});		
 	};
 });
