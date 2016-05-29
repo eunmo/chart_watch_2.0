@@ -96,7 +96,7 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 	};
 
 	$scope.fetch = function () {
-		$http.get('fetch_chart/single/' + $scope.chart,
+		$http.get('chart/fetch/single/' + $scope.chart,
 							{ params: { 
 								year: $scope.date.getFullYear(),
 								month: $scope.date.getMonth() + 1,

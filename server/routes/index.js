@@ -11,23 +11,31 @@
 	var mongodb = require ('mongodb');
 	var MongoClient = mongodb.MongoClient;
   var	assert = require ('assert');
-  var url = 'mongodb://localhost:27017/chartwatchTest';
+  var url = 'mongodb://localhost:27017/chartwatch';
   
-	var routeDir = path.resolve ('server/routes');
+	var dirs = [];
+	dirs.push (path.resolve ('server/routes/chart'));
+	dirs.push (path.resolve ('server/routes/file'));
 
 	Promise.promisifyAll(mongodb);
+
+	var addRoutes = function (dir, db) {
+		fs.readdirSync (dir)
+			.filter (function (file) {
+				return (file.indexOf ('.') !== 0);
+			})
+			.forEach (function (file) {
+				require (path.join (dir, file)) (router, db);
+			});
+	};
 
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
 		console.log("Connected succesfully to mongoDB server");
 
-		fs.readdirSync (routeDir)
-		  .filter (function (file) {
-				return (file.indexOf ('.') !== 0) && (file !== 'index.js');
-			})
-			.forEach (function (file) {
-				require (path.join (routeDir, file)) (router, db);
-			});
+		for (var i in dirs) {
+			addRoutes (dirs[i], db);
+		}
 	});
 
   /* GET home page. */

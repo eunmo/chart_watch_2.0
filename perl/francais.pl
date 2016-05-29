@@ -19,40 +19,26 @@ my $year = $date->week_year();
 
 print "[";
 
-if (($year == 2005 && $date->month() == 3 && $date->day() == 4) ||  #2007.01.20
-	  ($year == 2007 && $date->month() == 1 && $date->day() == 12) ||	#2005.03.12
-		($year == 2015 && $date->month() >= 2) ||
-	  ($year >= 2016))	{
-	my $week = $date->week_number();
+if (($year == 2005 && $date->month() == 3 && $date->day() == 4) ||
+	  ($year == 2007 && $date->month() == 1 && $date->day() == 12)) {
+	my $week = $year == 2005 ? "09" : "02";
+	my $url = "http://acharts.co/france_singles_top_100/$year/$week";
+	my $html = get("$url");
 
-	if ($year == 2016) {
-		if ($week == 53) {
-			$week = 1;
-		} else {
-			$week++;
-		}
-	}
-	elsif ($year == 2007) {
-		$week--;
-	}
-	
-	my $week_string = sprintf("%02d", $week);
-	my $chart = ($year < 2015) ? "top-singles" : "top-singles-telecharges";
-	my $url = "http://www.snepmusique.com/tops-semaine/$chart/?ye=$year&we=$week_string";
-	my $html = `curl -s "$url"`;
 	my $dom = Mojo::DOM->new($html);
 	my $rank = 1;
 
-	for my $div ($dom->find('div[class*="infos"]')->each) {
-		my $title = $div->find('[class="title"]')->first->text;
-		my $artist = $div->find('[class="artist"]')->first->text;
+	for my $tr ($dom->find('table[class*=std] tbody tr')->each) {
+		my $title = $tr->find('span[itemprop="name"]')->first->text;
+		my $artist = $tr->find('span[itemprop="name"]')->last->text;
 		my $title_norm = normalize_title($title);
 		my $artist_norm = normalize_artist($artist);
 		print ",\n" if $rank > 1;
 		print "{ \"rank\": $rank, \"artist\": \"$artist_norm\", \"title\" : \"$title_norm\" }";
 		$rank++;
+		last if $rank > 100;
 	}
-} else {
+} elsif ($year < 2015 || $year == 2015 && $date->month() < 2) {
 	if ($year < 2003 || ($year == 2003 && $date->month() < 4) ||
 		  ($year == 2003 && $date->month() == 4 && $date->day() < 26)) {
 		$date->add( days => 1 );
@@ -76,6 +62,32 @@ if (($year == 2005 && $date->month() == 3 && $date->day() == 4) ||  #2007.01.20
 	for my $div ($dom->find('a[class*="navb"]')->each) {
 		my $title = $div->text;
 		my $artist = $div->find('b')->first->text;
+		my $title_norm = normalize_title($title);
+		my $artist_norm = normalize_artist($artist);
+		print ",\n" if $rank > 1;
+		print "{ \"rank\": $rank, \"artist\": \"$artist_norm\", \"title\" : \"$title_norm\" }";
+		$rank++;
+	}
+} else {
+	my $week = $date->week_number();
+
+	if ($year == 2016) {
+		$week++;
+	}	elsif ($year == 2016 && $week == 53) {
+		$year = 2016;
+		$week = 1;
+	}
+	
+	my $week_string = sprintf("%02d", $week);
+
+	my $url = "http://www.snepmusique.com/tops-semaine/top-singles-telecharges/?ye=$year&we=$week_string";
+	my $html = `curl -s "$url"`;
+	my $dom = Mojo::DOM->new($html);
+	my $rank = 1;
+
+	for my $div ($dom->find('div[class*="infos"]')->each) {
+		my $title = $div->find('[class="title"]')->first->text;
+		my $artist = $div->find('[class="artist"]')->first->text;
 		my $title_norm = normalize_title($title);
 		my $artist_norm = normalize_artist($artist);
 		print ",\n" if $rank > 1;
