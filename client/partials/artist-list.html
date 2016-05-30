@@ -1,0 +1,29 @@
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<h1>{{initial}}</h1>
+			</th>
+		</tr>
+	</thead>
+	<tr ng-show="albumArtists.length">
+		<td>
+			<artist-rows artists="albumArtists" desc="'Album'"></artist-rows>
+		</td>
+	</tr>
+	<tr ng-show="singleArtists.length">
+		<td>
+			<artist-rows artists="singleArtists" desc="'Single'"></artist-rows>
+		</td>
+	</tr>
+	<tr ng-show="chartedArtists.length">
+		<td>
+			<artist-rows artists="chartedArtists" desc="'Charted'"></artist-rows>
+		</td>
+	</tr>
+	<tr ng-show="others.length">
+		<td>
+			<artist-rows artists="others" desc="'Other'"></artist-rows>
+		</td>
+	</tr>
+</table>

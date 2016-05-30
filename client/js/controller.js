@@ -1,3 +1,29 @@
+chartwatchApp.controller('InitialCtrl', function ($rootScope, $scope, $http) {
+ 
+  $scope.initials = [];
+
+	$scope.initials.push.apply($scope.initials, '가나다라마바사아자차카타파하'.split(''));
+	$scope.initials.push.apply($scope.initials, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''));
+	$scope.initials.push('0-9');
+});
+
+chartwatchApp.controller('ArtistInitialCtrl', function ($rootScope, $scope, $routeParams, $http) {
+
+	$scope.initial = $routeParams.initial;	
+  $scope.albumArtists = [];
+  $scope.singleArtists = [];
+  $scope.chartedArtists = [];
+	$scope.others = [];
+
+	$http.get('artist/initial/' + $routeParams.initial).success(function (data) {
+		console.log (data);
+  	$scope.albumArtists = data.albumArtists;
+	  $scope.singleArtists = data.singleArtists;
+	  $scope.chartedArtists = data.chartedArtists;
+		$scope.others = data.others;
+	});
+});
+
 chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $routeParams, $http, $location) {
 
 	function toUTCDate (date) {

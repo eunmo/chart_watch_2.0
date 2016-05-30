@@ -30,8 +30,8 @@
 				var promises = [];
 
 				promises.push( exec('rm -f '+ uploadDir + '/*'));
-				promises.push( exec('rm -f '+ musicDir + '/*'));
-				promises.push( exec('rm -f '+ imageDir + '/*'));
+				//promises.push( exec('rm -f '+ musicDir + '/*'));
+				//promises.push( exec('rm -f '+ imageDir + '/*'));
 
 				return Promise.all (promises);
 			})

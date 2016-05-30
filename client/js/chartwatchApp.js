@@ -2,7 +2,12 @@ chartwatchApp = angular.module('chartwatchApp', ['ngRoute'])
 .config(function ($routeProvider) {
 	$routeProvider
 	.when('/', {
-		templateUrl: '/partials/blank.html',
+		templateUrl: '/partials/initials.html',
+		controller: 'InitialCtrl'
+	})
+	.when('/initial/:initial', {
+		templateUrl: '/partials/artist-list.html',
+		controller: 'ArtistInitialCtrl'
 	})
 	.when('/chart/single/:name', {
 		templateUrl: '/partials/chart.html',

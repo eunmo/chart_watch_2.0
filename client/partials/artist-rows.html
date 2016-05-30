@@ -1,0 +1,30 @@
+<h1>
+	{{artists.length}}
+	{{desc}} Artist<span ng-show="artists.length > 1">s</span>
+</h1>
+<table class="table table-hover">
+	<tr>
+		<th ng-show="{{desc === 'Album' || desc === 'Single'}}"></th>
+		<th>Name</th>
+		<th ng-show="{{desc === 'Album'}}">Comp.</th>
+		<th ng-show="{{desc === 'Album'}}">Studio</th>
+		<th ng-show="{{desc === 'Album'}}">EP</th>
+		<th ng-show="{{desc === 'Album' || desc === 'Single'}}">Single</th>
+		<th ng-hide="{{desc === 'Other'}}" ng-repeat="song in [1,2,3,4,5,6,7,8,9,10]">{{song}}</th>
+	</tr>
+	<tr ng-repeat="artist in artists | orderBy:'nameNorm'">
+		<td class="td-img-list" ng-show="{{desc === 'Album' || desc === 'Single'}}">
+			<img src="/{{artist.albums.recent}}.40px.jpg" class="img-rounded img-album-up-list">
+		</td>
+		<td>
+			<artist-link artist="artist"></artist-link>
+		</td>
+		<td ng-show="{{desc === 'Album'}}"><span ng-show="artist.albums.Compilation">{{artist.albums.Compilation}}</span></td>
+		<td ng-show="{{desc === 'Album'}}"><span ng-show="artist.albums.Studio">{{artist.albums.Studio}}</span></td>
+		<td ng-show="{{desc === 'Album'}}"><span ng-show="artist.albums.EP">{{artist.albums.EP}}</span></td>
+		<td ng-show="{{desc === 'Album' || desc === 'Single'}}"><span ng-show="artist.albums.Single">{{artist.albums.Single}}</span></td>
+		<td ng-hide="{{desc === 'Other'}}" ng-repeat="song in [1,2,3,4,5,6,7,8,9,10]">
+			<rank-badge class="pull-left span-rank" min="song" show-min="false" count="artist.songs[song] + artist.feats[song]"></rank-badge>
+		</td>
+	</tr>
+</table>

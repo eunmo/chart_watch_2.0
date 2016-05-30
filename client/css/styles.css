@@ -1,3 +1,210 @@
 body {
-  font-family: 'Noto Sans', 'Noto Sans CJK KR', 'Noto Sans JP', 나눔고딕, sans-serif;
+	font-family: 'Noto Sans', 'Noto Sans CJK KR', 'Noto Sans JP',	나눔고딕, sans-serif;
+}
+
+.initial {
+	padding: 15px;
+}
+
+.btn-initial {
+	padding: 0px;
+	border: 7px solid;
+	border-radius: 20px;
+}
+
+.h1-initial {
+	padding: 10px;
+	margin: 10px;
+}
+
+.h1-shuffle {
+	padding: 10px;
+	margin: 10px;
+	margin-bottom: 7px;
+}
+
+.h2-upnext {
+	margin-top: 0px;
+}
+
+.img-album {
+	width: 300px;
+}
+
+.img-album-up-next {
+	width: 40px;
+}
+
+.img-album-up-list {
+	width: 30px;
+}
+
+.td-img {
+	width: 330px;
+}
+
+.td-img-list {
+	padding: 3px !important;
+}
+
+.song-desc {
+	height: 20px;
+}
+
+.song-track {
+	display: inline-block;
+	text-align: right;
+	width: 27px;
+	margin-right: 10px;
+	font-size: 12px;
+	position: relative;
+	top: -2px;
+}
+
+.song-desc-title {
+	font-size: 16px;
+}
+
+.song-desc-right {
+	height: 20px;
+	font-size: 18px;
+}
+
+.progress-music {
+	display: inline-block;
+	width: 300px;
+	height: 10px;
+	margin-bottom: 0px;
+}
+
+.progress-bar-music {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+
+.label-clear {
+	font-size: 14px;
+}
+
+.btn-edit {
+	font-size: 14px;
+}
+
+.btn-song-dropdown {
+	padding-top: 0px;
+	padding-bottom: 4px;
+	padding-right: 4px;
+	padding-left: 4px;
+	position: relative;
+	top: -5px;
+}
+
+.dropdown-song {
+	min-width: 0px;
+}
+
+.badge-plays {
+	position: relative;
+	top: -4px;
+	margin-left: 5px;
+}
+
+.label-as-badge {
+	border-radius: 1em;
+}
+
+.span-rank {
+	height: 20px;
+	font-size: 18px;
+}
+
+.badge-rank {
+	position: relative;
+	top: -4px;
+}
+
+.media-ones {
+	margin-top: 0px;
+}
+
+.media-body-ones {
+	width: 125px;
+}
+
+.media-desc-ones {
+	height: 20px;
+}
+
+.song-desc-up-ones {
+	display: inline-block;
+	width: 125px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 14px;
+}
+
+.ones-week {
+	width: 40px;
+}
+
+.recent-artists {
+	width: 200px;
+	height: 20px;
+}
+
+.recent-artist-list {
+	display: inline-block;
+	width: 200px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 14px;
+}
+
+.up-next-artists {
+	width: 140px;
+	height: 20px;
+}
+
+.up-next-artist-list {
+	display: inline-block;
+	width: 140px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 14px;
+}
+
+.glyphicon-up-next {
+	top: 3px;
+}
+
+.bar {
+	fill: steelblue;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.y.axis path {
+	display: none;
+}
+
+.y.axis line {
+	stroke: #ffffff;
+}
+
+.now-playing-badge {
+	height: 20px;
+	font-size: 18px;
+	position: relative;
+	top: 2px;
 }

@@ -1,0 +1,14 @@
+<div class="row">
+	<div class="col-md-2 col-sm-2 col-xs-2 initial">
+		<button class="btn btn-default btn-lg btn-block btn-initial" ng-click="shuffle()">
+			<h1 class="h1-initial h1-shuffle">
+				<span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+			</h1>
+		</button>
+	</div>
+	<div class="col-md-2 col-sm-2 col-xs-2 initial" ng-repeat="initial in initials">
+		<a type="button" class="btn btn-default btn-lg btn-block btn-initial" href="#/initial/{{initial}}">
+			<h1 class="h1-initial">{{initial}}</h1>
+		</a>
+	</div>
+</div>

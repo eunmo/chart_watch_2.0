@@ -16,6 +16,7 @@
 	var dirs = [];
 	dirs.push (path.resolve ('server/routes/chart'));
 	dirs.push (path.resolve ('server/routes/file'));
+	dirs.push (path.resolve ('server/routes/artist'));
 
 	Promise.promisifyAll(mongodb);
 
