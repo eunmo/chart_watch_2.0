@@ -37,6 +37,10 @@
 			return Counters.update ({ _id: type }, { $set: { seq: value } });
 		}
 
+		function normalize (string) {
+			return string.replace(/`/g, "'");
+		}
+
 		function syncArtist (artist) {
 			return Artists.find (
 				{ _id: artist.id })
@@ -45,8 +49,8 @@
 				if (docs.length === 0) {
 					var newArtist = {
 						_id: artist.id,
-						name: artist.name,
-						nameNorm: artist.nameNorm
+						name: normalize (artist.name),
+						nameNorm: normalize (artist.nameNorm)
 					};
 
 					if (artist.origin !== null)
@@ -109,7 +113,7 @@
 					var song = body[i];
 					songs[song.id] = {
 						_id: song.id,
-						title: song.title,
+						title: normalize (song.title),
 						time: song.time,
 						bitrate: song.bitrate,
 						plays: song.plays,
@@ -172,8 +176,8 @@
 					var album = body[i];
 					albums[album.id] = {
 						_id: album.id,
-						title: album.title,
-						release: new Date(album.release),
+						title: normalize (album.title),
+						release: new Date (album.release),
 						type: album.type,
 						artists: [],
 						discs: []			 

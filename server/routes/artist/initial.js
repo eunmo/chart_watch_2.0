@@ -28,7 +28,6 @@
 			} else {
 				// alphabet
 				var regex = new RegExp('^' + initial, 'i');
-				console.log (regex);
 				query = { nameNorm: { $regex: regex } };
 			}
 
