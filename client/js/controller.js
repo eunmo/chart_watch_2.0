@@ -24,6 +24,36 @@ chartwatchApp.controller('ArtistInitialCtrl', function ($rootScope, $scope, $rou
 	});
 });
 
+chartwatchApp.controller('ArtistCtrl', function ($rootScope, $scope, $routeParams, $http) {
+	
+	$scope.loaded = false;
+
+	$http.get('artist/all_songs/' + $routeParams.id).success(function (doc) {
+		$scope.artist = doc.artists[0];
+		$scope.artists = doc.artists;
+		$scope.albums = doc.albums;
+		$scope.songs = doc.songs;
+		$scope.loaded = true;
+	});
+
+	$scope.showArtistArray = function (songId, album) {
+		if (songId === null)
+			return false;
+
+		var song = $scope.songs[songId];
+
+		if (song.artists.length !== album.artists.length)
+			return true;
+
+		for (var i in song.artists) {
+			if (song.artists[i] !== album.artists[i])
+				return true;
+		}
+
+		return false;
+	};
+});
+
 chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $routeParams, $http, $location) {
 
 	function toUTCDate (date) {

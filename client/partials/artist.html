@@ -1,0 +1,67 @@
+<div ng-show="loaded">
+	<div>
+		<h1>
+			{{artist.name}}
+			<small>
+				{{artist.gender}}
+				{{artist.type}}
+				<span ng-show="artist.origin">from </span>{{artist.origin}}
+			</small>
+		</h1>
+	</div>
+	<table class="table" ng-repeat="album in albums | orderBy : 'release' : true">
+		<tr>
+			<td class="td-img">
+				<img src="/{{album._id}}.jpg" class="img-rounded img-album">
+			</td>
+			<td>
+				<h3>
+					{{album.title}}
+					<small>
+						{{album.type}}
+					</small>
+				</h3>
+				<h4>
+					<small>
+						by
+					</small>
+					<span ng-repeat="artist in album.artists">
+						<a href="#/artist/{{artists[artist]._id}}">{{artists[artist].name}}</a><span ng-hide="$last">,</span>
+					</span>
+				</h4>
+				<table class="table table-hover" ng-repeat="disc in album.discs track by $index" ng-show="disc !== null">
+					<th ng-show="album.discs.length > 2">
+						Disc {{$index}}
+					</th>
+					<tr ng-repeat="track in disc.tracks track by $index">
+						<td ng-show="track !== null">
+							<div class="song-desc">
+								<span class="song-desc-title">
+									<span class="song-track">{{$index}}</span>
+									{{songs[track].title}}
+								</span>
+								<span class="pull-right song-desc-right">
+									<span class="badge badge-plays" ng-show="{{songs[track].plays}}">{{songs[track].plays}}</span>
+								</span>
+							</div>
+							<div ng-show="{{showArtistArray (track, album)}}">
+								<span class="song-track"></span>
+								<small>by</small>
+								<span ng-repeat="artist in songs[track].artists">
+									<a href="#/artist/{{artists[artist]._id}}">{{artists[artist].name}}</a><span ng-hide="$last">,</span>
+								</span>
+							</div>
+							<div ng-show="{{songs[track].features.length}}">
+								<span class="song-track"></span>
+								<small>feat.</small>
+								<span ng-repeat="artist in songs[track].features">
+									<a href="#/artist/{{artists[artist]._id}}">{{artists[artist].name}}</a><span ng-hide="$last">,</span>
+								</span>
+							</div>
+						</td>
+					</tr>	
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

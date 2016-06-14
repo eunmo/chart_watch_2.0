@@ -185,6 +185,14 @@
 									disc.tracks[k] = Number (l);
 							}
 						}
+						
+						album.discs[j] = null;
+						for (k in disc.tracks) {
+							if (disc.tracks[k] !== null) {
+								album.discs[j] = disc;
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -211,7 +219,7 @@
 				delete song.bitrate;
 			}
 
-			return { aritsts: artists, albums: albums, songs: songs };
+			return { artists: artists, albums: albums, songs: songs };
 		}
 
 		router.get('/artist/all_songs/:_id', function (req, res) {

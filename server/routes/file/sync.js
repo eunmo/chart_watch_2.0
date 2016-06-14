@@ -60,7 +60,7 @@
 						newArtist.type = artist.type;
 
 					if (artist.gender !== null)
-						newArtist.type = artist.gender;
+						newArtist.gender = artist.gender;
 
 					return Artists.insert (newArtist);
 				}
