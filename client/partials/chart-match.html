@@ -1,0 +1,68 @@
+<h1>
+		<span>{{chart | capitalize}} Chart</span>
+</h1>
+<h2>
+	<form class="form-inline">
+		<small>
+			<div class="form-group">
+				<label>Week of</label>
+				<input type="date" class="form-control" ng-model="date"></input>
+			</div>
+			<button class="btn btn-default" ng-click="go()">Go</button>
+			<button class="btn btn-default" ng-click="prev()">Prev</button>
+			<button class="btn btn-default" ng-click="next()">Next</button>
+			<button class="btn btn-default" ng-click="fetch()">Fetch</button>
+			<button class="btn btn-default pull-right" ng-click="history()">History</button>
+		</small>
+	</form>
+</h2>
+<table class="table table-hover">
+	<tr>
+		<th>
+			Pos
+		</th>
+		<th>
+			LW
+		</th>
+		<th>
+			Single
+		</th>
+		<th>
+			depth
+		</th>
+		<th>
+			Match
+		</th>
+		<th>
+			Peak
+		</th>
+		<th>
+			WoC
+		</th>
+	</tr>
+	<tr ng-repeat="row in rows">
+		<td>
+			<span>{{row.rank.cur}}</span>
+		</td>
+		<td>
+			<span><last-week rank="row.rank" /></span>
+		</td>
+		<td>
+			<div>{{row.title}}</div>
+			<div>{{row.artist}}</div>
+		</td>
+		<td>
+			<div>{{row.songMatchDepth}}</div>
+			<div>{{row.artistMatchDepth}}</div>
+		<td>
+			<div ng-repeat="song in row.matchedSongs">{{song.title}}</div>
+			<div>{{row.matchedArtist.name}}</div>
+		</td>
+		<td>
+			<span>{{row.rank.min}}</span>
+		</td>
+		<td>
+			<span>{{row.rank.run}}</span>
+		</td>
+	</tr>
+</table>

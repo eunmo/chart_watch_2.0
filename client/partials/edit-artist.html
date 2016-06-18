@@ -1,0 +1,112 @@
+<h1>
+  <small>Editing</small>
+  {{artist.name}}
+</h1>
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Artist Name</label>
+    <div class="col-sm-8">
+      <input class="form-control" ng-model="artist.name" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Normalized Name</label>
+    <div class="col-sm-8">
+      <input class="form-control" ng-model="artist.nameNorm" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Type</label>
+    <div class="col-sm-8">
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.type" value="Solo" /> Solo
+      </label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.type" value="Duo" /> Duo
+      </label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.type" value="Group" /> Group
+      </label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Gender</label>
+    <div class="col-sm-8">
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.gender" value="Male" /> Male
+      </label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.gender" value="Female" /> Female
+      </label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="artist.gender" value="Mixed" /> Mixed
+      </label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Origin</label>
+    <div class="col-sm-8">
+      <select class="form-control" ng-model="artist.origin">
+        <option>Korea</option>
+        <option>USA</option>
+        <option>UK</option>
+        <option>Japan</option>
+        <option>Australia</option>
+        <option>Austria</option>
+        <option>Barbados</option>
+        <option>Belgium</option>
+        <option>British Virgin Islands</option>
+        <option>Canada</option>
+        <option>China</option>
+        <option>Columbia</option>
+        <option>Cyprus</option>
+        <option>Denmark</option>
+        <option>Finland</option>
+        <option>France</option>
+        <option>Germany</option>
+        <option>Greece</option>
+        <option>Guinea</option>
+        <option>Israel</option>
+        <option>Ireland</option>
+        <option>Italy</option>
+        <option>Japan</option>
+        <option>Jamaica</option>
+        <option>Lebanon</option>
+        <option>Lithuania</option>
+        <option>Macedonia</option>
+        <option>Moldova</option>
+        <option>Morocco</option>
+        <option>Netherlands</option>
+        <option>New Zealand</option>
+        <option>Norway</option>
+        <option>Panama</option>
+        <option>Poland</option>
+        <option>Portugal</option>
+        <option>Russia</option>
+        <option>Singapore</option>
+        <option>Spain</option>
+        <option>Sweden</option>
+        <option>Switzerland</option>
+        <option>Thailand</option>
+      </select>
+    </div>
+  </div>
+  <div ng-repeat="name in artist.newChartNames">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Chart Name</label>
+      <div class="col-sm-7">
+        <input class="form-control" ng-model="name.name" />
+      </div>
+      <div class="col-sm-1">
+      	<button class="btn btn-default" ng-click="deleteChartName($index)">Delete</button>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+		<div class="col-sm-offset-3 col-sm-8">
+      <button class="btn btn-default" ng-click="edit()">Edit</button>
+      <button class="btn btn-default" ng-click="addChartName()">Add Chart Name</button>
+    </div>
+  </div>
+</form>
+

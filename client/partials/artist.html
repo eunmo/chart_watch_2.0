@@ -7,6 +7,15 @@
 				{{artist.type}}
 				<span ng-show="artist.origin">from </span>{{artist.origin}}
 			</small>
+			<div class="btn-group pull-right">
+        <button type="button" class="btn btn-default btn-song-dropdown dropdown-toggle"
+          data-toggle="dropdown" aria-expanded="false">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right dropdown-song" role="menu">
+          <li role="presentation"><a href="#/artist/edit/{{artist._id}}">Edit artist</a></li>
+        </ul>
+      </div>
 		</h1>
 	</div>
 	<table class="table" ng-repeat="album in albums | orderBy : 'release' : true">

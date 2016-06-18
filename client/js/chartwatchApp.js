@@ -9,9 +9,21 @@ chartwatchApp = angular.module('chartwatchApp', ['ngRoute'])
 		templateUrl: '/partials/artist-list.html',
 		controller: 'ArtistInitialCtrl'
 	})
+	.when('/artist/edit/:id', {
+		templateUrl: '/partials/edit-artist.html',
+		controller: 'EditArtistCtrl'
+	})
 	.when('/artist/:id', {
 		templateUrl: '/partials/artist.html',
 		controller: 'ArtistCtrl'
+	})
+	.when('/chart/match/:name', {
+		templateUrl: '/partials/chart-match.html',
+		controller: 'SingleChartMatchCtrl'
+	})
+	.when('/chart/match/:name/:date', {
+		templateUrl: '/partials/chart-match.html',
+		controller: 'SingleChartMatchCtrl'
 	})
 	.when('/chart/single/:name', {
 		templateUrl: '/partials/chart.html',

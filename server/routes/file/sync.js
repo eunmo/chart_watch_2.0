@@ -47,14 +47,23 @@
 			.toArray ()
 			.then (function (docs) {
 				if (docs.length === 0) {
+					var name = normalize (artist.name);
+					var nameNorm = normalize (artist.nameNorm).toLowerCase ();
+					var nameNorm2 = name.replace (/\s+/g, '');
 					var newArtist = {
 						_id: artist.id,
-						name: normalize (artist.name),
-						nameNorm: normalize (artist.nameNorm)
+						name: name,
+						nameNorm: nameNorm,
 					};
+
+					if (name !== nameNorm2 && nameNorm !== nameNorm2)
+						newArtist.chartName = [nameNorm2];
 
 					if (artist.origin !== null)
 						newArtist.origin = artist.origin;
+
+					if (artist.type === 'Duet')
+						artist.type = 'Duo';
 
 					if (artist.type !== null)
 						newArtist.type = artist.type;
@@ -274,7 +283,8 @@
 				res.sendStatus (200);
 			})
 			.catch (function (error) {
-				res.json (error);
+				console.log (error);
+				res.json (error.message);
 			});
 		});
 	};
