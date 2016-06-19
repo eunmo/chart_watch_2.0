@@ -43,6 +43,7 @@
         nameNorm = nameNorm.replace(/[,&＆].*$/, '');
         nameNorm = nameNorm.replace(/\sfeat\..*$/i, '');
         nameNorm = nameNorm.replace(/\sand\s.*$/i, '');
+        nameNorm = nameNorm.replace(/\svs\.\s.*$/i, '');
         nameNorm = nameNorm.replace(/\s\+\s.*$/, '');
       } else if (chart === 'uk') {
         nameNorm = nameNorm.replace(/[&＆].*$/, '');
@@ -104,7 +105,6 @@
 				case 2:
 					var nameInv = invertArtist (entry);
 					if (nameInv !== entry.artist) {
-						console.log (nameInv);
 						return Artists.find ({ $or: [ { name: nameInv },
 																				  { chartName: nameInv },
 																					{ nameNorm: nameInv.toLowerCase () } ] }).toArray ();
@@ -210,6 +210,20 @@
 					if (matched)
 						entry.matchedSongs = matchedSongs;
 				}
+			})
+			.then (function () {
+				if (entry.matchedSongs && entry.matchedSongs[0] !== null) {
+					var songs = [];
+
+					for (var i in entry.matchedSongs) {
+						if (entry.matchedSongs[i])
+							songs.push (entry.matchedSongs[i]._id);
+						else
+							songs.push (null);
+					}
+
+					return SingleChartEntries.update ({ _id: entry._id }, { $set: { songs: songs } });
+				}
 			});
 		}
 
@@ -235,7 +249,7 @@
 				if (docs.length === 0) {
 					throw new Error('No Chart Found');
 				} else {
-					return SingleChartEntries.find ({ _id: { $in: docs[0].entries } }, { artist: 1, title: 1, rank: 1 }).toArrayAsync ();
+					return SingleChartEntries.find ({ _id: { $in: docs[0].entries } }, { artist: 1, title: 1, songs: 1 }).toArrayAsync ();
 				}
 			})
 		  .then (function (doc) {
@@ -244,42 +258,24 @@
 
 				for (var i in doc) {
 					var entry = doc[i];
-					var curRank = 100;
-					var prevRank = null;
-					var rankMin = 1000;
-					var rankRun = 0;
 
-					for (var j in entry.rank) {
-						var rankElem = entry.rank[j];
-
-						if (rankElem.week <= date) {
-							if (rankElem.week >= date) { /* equality */
-								curRank = rankElem.rank;
-							}
-							else if (rankElem.week >= prevWeek) {
-								prevRank = rankElem.rank;
-							}
-							rankRun++;
-
-							if (rankElem.rank < rankMin) {
-								rankMin = rankElem.rank;
-							}
-						}
-					}
-
-					entries[curRank - 1] = {
+					entries[i] = {
+						_id: entry._id,
 						artist: entry.artist, 
 						title: entry.title,
-						rank: {
-							cur: curRank,
-							run: rankRun,
-							min: rankMin,
-							prev: prevRank
-						},
 						chart: chartName
 					};
 
-					promises.push (matchChart (entries[curRank - 1]));
+					if (entry.songs) {
+						var matchedSongs = [];
+						for (var j in entry.songs) {
+							matchedSongs.push ({ title: entry.songs[j] });
+						}
+						entries[i].matchedSongs = matchedSongs;
+					}
+					else {
+						promises.push (matchChart (entries[i]));
+					}
 				}
 
 				return Promise.all (promises)
@@ -288,7 +284,7 @@
 					});
 			})
 			.then (function (entries) {
-				res.json (entries);
+				res.json ([]);
 			})
 			.catch (function (error) {
 				console.log (error);

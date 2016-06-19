@@ -5,6 +5,7 @@
 		var Songs = db.collection ('Songs');
 		var Albums = db.collection ('Albums');
 		var Artists = db.collection ('Artists');
+		var SingleChartEntries = db.collection('SingleChartEntries');
 
 		function getArtist (id) {
 			return Artists.find ({ _id: id })
@@ -222,6 +223,45 @@
 			return { artists: artists, albums: albums, songs: songs };
 		}
 
+		function getCharts (artist) {
+			var songIds = [];
+			var i, j, k;
+			var song;
+
+			for (i in artist.songs) {
+				songIds.push (artist.songs[i]._id);
+			}
+
+			return SingleChartEntries.find ({ songs: { $in : songIds } }).toArray ()
+			.then (function (docs) {
+				for (i in docs) {
+					var doc = docs[i];
+					var rankMin = 1000;
+
+					for (j in doc.rank) {
+						var rankElem = doc.rank[j];
+
+						if (rankElem.rank < rankMin)
+							rankMin = rankElem.rank;
+					}
+
+					for (j in doc.songs) {
+						for (k in artist.songs) {
+							if (doc.songs[j] === artist.songs[k]._id) {
+								song = artist.songs[k];
+								if (song.charts === undefined)
+									song.charts = [];
+								song.charts.push ({ chart: doc.chart, min: rankMin });
+								break;
+							}
+						}
+					}
+				}
+
+				return artist;
+			});
+		}
+
 		router.get('/artist/all_songs/:_id', function (req, res) {
 			var id = Number(req.params._id);
 
@@ -233,6 +273,7 @@
 			.then (getOtherAlbums)
 			.then (getOtherArtists)
 			.then (replaceIds)
+			.then (getCharts)
 			.then (function (artist) {
 				res.json (artist);
 			})

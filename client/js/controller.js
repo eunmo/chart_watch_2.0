@@ -34,6 +34,8 @@ chartwatchApp.controller('ArtistCtrl', function ($rootScope, $scope, $routeParam
 		$scope.albums = doc.albums;
 		$scope.songs = doc.songs;
 		$scope.loaded = true;
+
+		console.log ($scope.songs);
 	});
 
 	$scope.showArtistArray = function (songId, album) {
@@ -88,12 +90,10 @@ chartwatchApp.controller('EditArtistCtrl', function ($rootScope, $scope, $routeP
 	};
 
 	$scope.deleteChartName = function (index) {
-		console.log (index);
 		$scope.artist.newChartNames.splice (index, 1);
 	};
 
 	$scope.addChartName = function () {
-		console.log ($scope.artist.newChartNames);
 		if ($scope.artist.newChartNames.length === 0 ||
 				$scope.artist.newChartNames[$scope.artist.newChartNames.length - 1].name !== '')
 			$scope.artist.newChartNames.push ({ name: '' });
@@ -172,6 +172,7 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 								day: $scope.date.getDate()
 							} })
 		.success(function (chartRows) {
+			console.log (chartRows);
 			$scope.rows = chartRows;
 		});
 	};
@@ -198,7 +199,7 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 	};
 
 	$scope.fetch = function () {
-		$http.get('chart/fetch/single/' + $scope.chart,
+		$http.get('chart/single/fetch/' + $scope.chart,
 							{ params: { 
 								year: $scope.date.getFullYear(),
 								month: $scope.date.getMonth() + 1,
@@ -208,73 +209,8 @@ chartwatchApp.controller('SingleChartCtrl', function ($rootScope, $scope, $route
 			$scope.getChart ();
 		});		
 	};
-});
 
-chartwatchApp.controller('SingleChartMatchCtrl', function ($rootScope, $scope, $routeParams, $http, $location) {
-
-	function toUTCDate (date) {
-		return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-	}
-	
-	function getMaxDate (chart) {
-		var date = toUTCDate(new Date());
-
-		if ((chart === 'gaon' && date.getDay() < 4) ||
-				(chart === 'melon' && date.getDay() < 1) ||
-				(chart === 'billboard' && date.getDay() < 3) ||
-				(chart === 'oricon' && date.getDay() < 2))
-			date.setDate(date.getDate() - 7);
-
-		if ((chart === 'deutsche' && date.getDay() === 6) ||
-		    (chart === 'uk' && date.getDay() === 6) ||
-			  (chart === 'francais' && date.getDay() === 6))
-			date.setDate(date.getDate() + 7);
-		
-		date.setDate(date.getDate() - date.getDay() - 1);
-
-		return date;
-	}
-
-	function getMinDate (chart) {
-		if (chart === 'gaon') {
-			return new Date(Date.UTC(2010, 0, 2)); // Jan 2nd, 2010
-		} else {
-			return new Date(Date.UTC(2000, 0, 1)); // Jan 1st, 2000
-		}
-	}
-
-	$scope.adjustDate = function () {
-		var time = $scope.date.getTime();
-		if ($scope.max < time) {
-			$scope.date = new Date($scope.max);
-		} else if (time < $scope.min) {
-			$scope.date = new Date($scope.min);
-		} else {
-			$scope.date = new Date($scope.date);
-		}
-	};
-
-	$scope.chart = $routeParams.name;
-	$scope.maxDate = getMaxDate($scope.chart);
-	$scope.minDate = getMinDate($scope.chart);
-	
-	$scope.max = $scope.maxDate.getTime();
-	$scope.min = $scope.minDate.getTime();
-	$scope.rows = [];
-
-	if ($routeParams.date) {
-		$scope.date = toUTCDate(new Date($routeParams.date));
-		$scope.adjustDate();
-		var dateString = $scope.date.toISOString().substr(0, 10);
-		if ($routeParams.date !== dateString) {
-			$location.url('/chart/match/' + $scope.chart + '/'  + dateString);
-		}
-	} else {
-		$scope.date = $scope.maxDate;
-	} 
-
-	$scope.getChart = function () {
-		$scope.rows = [];
+	$scope.match = function () {
 		$http.get('chart/single/match/' + $scope.chart,
 							{ params: { 
 								year: $scope.date.getFullYear(),
@@ -282,40 +218,65 @@ chartwatchApp.controller('SingleChartMatchCtrl', function ($rootScope, $scope, $
 								day: $scope.date.getDate()
 							} })
 		.success(function (chartRows) {
-			$scope.rows = chartRows;
+			$scope.getChart ();
+		});		
+	};
+
+	$scope.edit = function (row) {
+		$location.url('/chart/single/edit/' + row._id);
+	};
+});
+
+chartwatchApp.controller('SingleChartEditCtrl', function ($rootScope, $scope, $routeParams, $http, $location) {
+	
+	$scope.entry = {};
+	$scope.songs = [];
+
+	$http.get('chart/edit/single/' + $routeParams.id).success (function (entry) {
+		$scope.entry = entry;
+		$scope.songs = [];
+
+		for (var i in entry.songs) {
+			$scope.songs.push ({ _id: entry.songs[i] });
+		}
+
+		console.log (entry);
+	});
+	
+	$scope.edit = function () {
+		var songs = [];
+
+		for (var i in $scope.songs) {
+			songs.push ($scope.songs[i]._id);
+		}
+
+		$scope.entry.songs = songs;
+		$http.put('chart/edit/single', $scope.entry)
+		.then(function (res) {
+			$location.url('/chart/single/' + $scope.entry.chart + '/' +
+										$scope.entry.rank[0].week.substring (0, 10));
 		});
 	};
 
-	$scope.getChart();
-
-	$scope.updateDate = function (offset) {
-		$scope.date.setDate($scope.date.getDate() + offset);
-		$scope.adjustDate();
-		var dateString = $scope.date.toISOString().substr(0, 10);
-		$location.url('/chart/match/' + $scope.chart + '/'  + dateString);
+	$scope.deleteSong = function (index) {
+		$scope.songs.splice (index, 1);
 	};
 
-	$scope.go = function () {
-		$scope.updateDate(6 - $scope.date.getDay());
+	$scope.addSong = function () {
+		if ($scope.songs.length === 0 ||
+				$scope.songs[$scope.songs.length - 1 ]._id > 0)
+			$scope.songs.push ({ _id: 0 });
 	};
+});
+
+chartwatchApp.controller('ChartMissingCtrl', function ($rootScope, $scope, $routeParams, $http, $location) {
+	$scope.entries = [];
+
+	$http.get('chart/single/missing/' + $routeParams.rank).success (function (entries) {
+		$scope.entries = entries;
+	});
 	
-	$scope.prev = function () {
-		$scope.updateDate(-7);
-	};
-	
-	$scope.next = function () {
-		$scope.updateDate(7);
-	};
-
-	$scope.fetch = function () {
-		$http.get('chart/fetch/single/match/' + $scope.chart,
-							{ params: { 
-								year: $scope.date.getFullYear(),
-								month: $scope.date.getMonth() + 1,
-								day: $scope.date.getDate()
-							} })
-		.success(function (chartRows) {
-			$scope.getChart ();
-		});		
+	$scope.edit = function (entry) {
+		$location.url('/chart/single/edit/' + entry._id);
 	};
 });

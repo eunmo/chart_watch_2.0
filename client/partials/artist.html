@@ -50,6 +50,9 @@
 									{{songs[track].title}}
 								</span>
 								<span class="pull-right song-desc-right">
+									<span ng-repeat="chart in songs[track].charts">
+										<rank-badge rank="chart" />
+									</span>
 									<span class="badge badge-plays" ng-show="{{songs[track].plays}}">{{songs[track].plays}}</span>
 								</span>
 							</div>

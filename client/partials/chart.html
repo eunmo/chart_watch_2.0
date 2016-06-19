@@ -12,6 +12,7 @@
 			<button class="btn btn-default" ng-click="prev()">Prev</button>
 			<button class="btn btn-default" ng-click="next()">Next</button>
 			<button class="btn btn-default" ng-click="fetch()">Fetch</button>
+			<button class="btn btn-default" ng-click="match()">Match</button>
 			<button class="btn btn-default pull-right" ng-click="history()">History</button>
 		</small>
 	</form>
@@ -28,10 +29,17 @@
 			Single
 		</th>
 		<th>
+		</th>
+		<th>
+			Songs
+		</th>
+		<th>
 			Peak
 		</th>
 		<th>
 			WoC
+		</th>
+		<th>
 		</th>
 	</tr>
 	<tr ng-repeat="row in rows">
@@ -46,10 +54,38 @@
 			<div>{{row.artist}}</div>
 		</td>
 		<td>
+			<img src="/{{row.album}}.40px.jpg" class="img-rounded">
+		</td>
+		<td>
+			<table ng-show="row.songs">
+				<tr>
+					<td ng-repeat="song in row.songs">
+						<div><b>{{song.title}}</b><span ng-hide="$last">/</span></div>
+						<div ng-show="$first">
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div ng-repeat="song in row.songs">
+				<span ng-show="$first">
+					<span ng-repeat="artist in song.artists">
+						<a href="#/artist/{{artist._id}}">{{artist.name}}</a><span ng-hide="$last">,</span>
+					</span>
+					<span ng-show="song.features">feat.</span>
+					<span ng-repeat="artist in song.features">
+						<a href="#/artist/{{artist._id}}">{{artist.name}}</a><span ng-hide="$last">,</span>
+					</span>
+				</span>
+			<div>
+		</td>
+		<td>
 			<span>{{row.rank.min}}</span>
 		</td>
 		<td>
 			<span>{{row.rank.run}}</span>
+		</td>
+		<td>
+			<button class="btn btn-default" ng-click="edit(row)">Edit</button>
 		</td>
 	</tr>
 </table>

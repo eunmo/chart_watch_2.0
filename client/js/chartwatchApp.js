@@ -17,13 +17,9 @@ chartwatchApp = angular.module('chartwatchApp', ['ngRoute'])
 		templateUrl: '/partials/artist.html',
 		controller: 'ArtistCtrl'
 	})
-	.when('/chart/match/:name', {
-		templateUrl: '/partials/chart-match.html',
-		controller: 'SingleChartMatchCtrl'
-	})
-	.when('/chart/match/:name/:date', {
-		templateUrl: '/partials/chart-match.html',
-		controller: 'SingleChartMatchCtrl'
+	.when('/chart/single/edit/:id', {
+		templateUrl: '/partials/edit-chart-single.html',
+		controller: 'SingleChartEditCtrl'
 	})
 	.when('/chart/single/:name', {
 		templateUrl: '/partials/chart.html',
@@ -32,6 +28,10 @@ chartwatchApp = angular.module('chartwatchApp', ['ngRoute'])
 	.when('/chart/single/:name/:date', {
 		templateUrl: '/partials/chart.html',
 		controller: 'SingleChartCtrl'
+	})
+	.when('/chart/missing/:rank', {
+		templateUrl: '/partials/missing.html',
+		controller: 'ChartMissingCtrl'
 	})
 	.otherwise({
 		redirectTo: '/'

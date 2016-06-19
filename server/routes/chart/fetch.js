@@ -8,7 +8,7 @@
 		var SingleCharts = db.collection('SingleCharts');
 		var SingleChartEntries = db.collection('SingleChartEntries');
 
-		router.get ('/chart/fetch/single/:_chart', function (req, res) {
+		router.get ('/chart/single/fetch/:_chart', function (req, res) {
 			var chartName = req.params._chart;
 			var year = req.query.year;
 			var month = req.query.month;

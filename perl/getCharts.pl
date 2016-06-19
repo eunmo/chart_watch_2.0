@@ -55,6 +55,8 @@ sub getChart($)
 {
 	my $chart = shift;
 
-	my $url = "\"http://localhost:$port/fetch_chart/single/$chart\"";
+	my $url = "\"http://localhost:$port/chart/single/fetch/$chart\"";
+	system("curl $url > /dev/null 2>&1");
+	my $url = "\"http://localhost:$port/chart/single/match/$chart\"";
 	system("curl $url > /dev/null 2>&1");
 }
